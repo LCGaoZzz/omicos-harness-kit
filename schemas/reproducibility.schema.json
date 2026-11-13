@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/omicos-harness-kit/reproducibility.schema.json",
+  "title": "Public adapter reproducibility record",
+  "type": "object",
+  "required": ["schema_version", "request_sha256", "manifest_sha256", "environment", "seed", "command_or_module", "created_at"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "request_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "manifest_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "environment": {"type": "object", "additionalProperties": {"type": ["string", "number", "boolean", "null"]}},
+    "seed": {"type": ["integer", "string", "null"]},
+    "command_or_module": {"type": "string", "minLength": 1},
+    "created_at": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": false
+}
