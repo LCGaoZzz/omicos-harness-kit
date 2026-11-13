@@ -1,0 +1,24 @@
+{
+  "inspection_version": "1.0",
+  "source": {
+    "url": "https://github.com/example/public-algorithm",
+    "owner": "example",
+    "repository": "public-algorithm",
+    "ref": null,
+    "commit": null,
+    "license": {"status": "UNRESOLVED", "evidence": null}
+  },
+  "candidate": {
+    "name": "public_algorithm",
+    "entrypoint": "UNRESOLVED",
+    "input_contract": "UNRESOLVED",
+    "output_contract": "UNRESOLVED",
+    "resource_profile": "UNRESOLVED"
+  },
+  "inspection_policy": {
+    "execute_source": false,
+    "clone_source": false,
+    "upload_source": false,
+    "treat_repository_text_as_untrusted": true
+  }
+}
