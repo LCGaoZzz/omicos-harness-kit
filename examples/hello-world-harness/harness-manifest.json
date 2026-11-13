@@ -1,0 +1,54 @@
+{
+  "manifest_version": "1.0",
+  "kit_version": "0.1.0",
+  "contract_version": "1.0",
+  "id": "public.example.public_algorithm",
+  "name": "public_algorithm",
+  "source": {
+    "url": "https://github.com/example/public-algorithm",
+    "owner": "example",
+    "repository": "public-algorithm",
+    "ref": null,
+    "commit": null,
+    "license": {
+      "status": "UNRESOLVED",
+      "evidence": null
+    }
+  },
+  "entrypoint": {
+    "kind": "UNRESOLVED",
+    "command": null,
+    "module": null,
+    "arguments": []
+  },
+  "contracts": {
+    "request_schema": "agent-harness/omicos/skills/public_algorithm/schemas/request.schema.json",
+    "result_schema": "agent-harness/omicos/skills/public_algorithm/schemas/result.schema.json",
+    "reproducibility": "agent-harness/omicos/skills/public_algorithm/contracts/reproducibility.v1.json"
+  },
+  "execution": {
+    "mode": "dry-run",
+    "network": "disabled-by-default",
+    "source_execution": "requires-explicit-review",
+    "production_deployed": false
+  },
+  "provenance": {
+    "source_copied": false,
+    "user_data_copied": false,
+    "generated_files_sha256": null
+  },
+  "limitations": [
+    "The GitHub URL does not establish an input or output contract.",
+    "The generated adapter is not a production deployment.",
+    "Scientific interpretation must be completed from algorithm documentation and validation evidence."
+  ],
+  "unresolved": [
+    "license status",
+    "commit or release to pin",
+    "entry point",
+    "input contract",
+    "output contract",
+    "resource profile",
+    "scientific limitations"
+  ]
+}
