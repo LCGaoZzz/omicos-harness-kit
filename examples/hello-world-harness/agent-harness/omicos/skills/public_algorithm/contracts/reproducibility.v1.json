@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "required": [
+    "request_sha256",
+    "manifest_sha256",
+    "environment",
+    "seed",
+    "command_or_module",
+    "created_at"
+  ],
+  "notes": [
+    "Do not include secrets or user data in this record.",
+    "Record exact source commit when available."
+  ]
+}
