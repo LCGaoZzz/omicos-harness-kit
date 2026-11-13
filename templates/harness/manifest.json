@@ -1,0 +1,15 @@
+{
+  "manifest_version": "1.0",
+  "contract_version": "1.0",
+  "id": "public.example.algorithm",
+  "name": "algorithm",
+  "source": {
+    "url": "https://github.com/example/algorithm",
+    "ref": null,
+    "commit": null,
+    "license": {"status": "UNRESOLVED", "evidence": null}
+  },
+  "entrypoint": {"kind": "UNRESOLVED", "command": null, "module": null, "arguments": []},
+  "execution": {"mode": "dry-run", "network": "disabled-by-default", "production_deployed": false},
+  "provenance": {"source_copied": false, "user_data_copied": false}
+}
