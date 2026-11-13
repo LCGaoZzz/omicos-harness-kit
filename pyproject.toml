@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "omicos-harness-kit"
+version = "0.1.0"
+description = "Public compiler and scaffold for Omicos-compatible algorithm harnesses"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "Apache-2.0"}
+authors = [{name = "LCGaoZzz"}]
+dependencies = []
+
+[project.scripts]
+ohf = "ohf.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+ohf = ["templates/**/*"]
