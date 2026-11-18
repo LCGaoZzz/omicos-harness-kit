@@ -1,7 +1,8 @@
 {
   "manifest_version": "1.0",
-  "kit_version": "0.1.0",
+  "kit_version": "0.2.0",
   "contract_version": "1.0",
+  "layout": "bundle",
   "id": "public.example.public_algorithm",
   "name": "public_algorithm",
   "source": {
@@ -38,9 +39,9 @@
     "generated_files_sha256": null
   },
   "limitations": [
-    "The GitHub URL does not establish an input or output contract.",
-    "The generated adapter is not a production deployment.",
-    "Scientific interpretation must be completed from algorithm documentation and validation evidence."
+    "The GitHub URL does not establish an algorithm input/output contract.",
+    "This scaffold does not execute an algorithm or verify product integration.",
+    "Scientific interpretation requires algorithm-specific validation."
   ],
   "unresolved": [
     "license status",

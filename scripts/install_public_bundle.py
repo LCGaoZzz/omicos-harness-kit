@@ -1,38 +1,40 @@
 #!/usr/bin/env python3
-"""Copy a reviewed public bundle into a user-selected workspace.
-
-This is a local file operation. It does not deploy to a production runtime.
-"""
+"""Compatibility wrapper; prefer `ohf install BUNDLE --workspace WORKSPACE`."""
 from __future__ import annotations
 
 import argparse
 import json
-import shutil
+import sys
 from pathlib import Path
+
+from ohf.install import install
+from ohf.validate import validate
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("bundle", type=Path)
-    parser.add_argument("--destination", type=Path, required=True)
+    destination = parser.add_mutually_exclusive_group(required=True)
+    destination.add_argument("--workspace", type=Path)
+    destination.add_argument("--destination", type=Path, help="deprecated alias: destination is now a workspace containing skills/")
+    parser.add_argument("--replace", action="store_true")
+    parser.add_argument("--require-runtime-ready", action="store_true")
     args = parser.parse_args()
-    source = args.bundle.resolve()
-    target = args.destination.resolve()
-    if not (source / "harness-manifest.json").is_file():
-        raise SystemExit("bundle is missing harness-manifest.json")
-    if target.exists() and any(target.iterdir()):
-        raise SystemExit(f"destination is not empty: {target}")
-    target.mkdir(parents=True, exist_ok=True)
-    for path in source.iterdir():
-        if path.name == "validation":
-            continue
-        destination = target / path.name
-        if path.is_dir():
-            shutil.copytree(path, destination)
-        else:
-            shutil.copy2(path, destination)
-    print(json.dumps({"ok": True, "destination": str(target), "production_deployed": False}, indent=2))
-    return 0
+    try:
+        workspace = args.workspace or args.destination
+        if args.destination is not None:
+            checked = validate(args.bundle, require_runtime_ready=args.require_runtime_ready)
+            if not checked["ok"]:
+                raise ValueError("bundle validation failed: " + "; ".join(checked["errors"]))
+            print("--destination is deprecated; it denotes the workspace, and the skill is installed under skills/<name>/.", file=sys.stderr)
+            workspace.mkdir(parents=True, exist_ok=True)
+        result = install(args.bundle, workspace, replace=args.replace,
+                         require_runtime_ready=args.require_runtime_ready)
+        print(json.dumps(result, indent=2))
+        return 0
+    except (OSError, ValueError) as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
 
 
 if __name__ == "__main__":

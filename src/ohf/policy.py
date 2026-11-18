@@ -3,8 +3,8 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
+from .paths import bundle_files
 
-TEXT_SUFFIXES = {".md", ".txt", ".json", ".yaml", ".yml", ".toml", ".py", ".sh", ".tsv", ".csv"}
 SECRET_PATTERNS = [
     re.compile(r"gh" + r"[pousr]_" + r"[A-Za-z0-9_\-]{20,}"),
     re.compile(r"github_pat_[A-Za-z0-9_\-]{20,}"),
@@ -27,11 +27,11 @@ PRIVATE_ASSET_TERMS = {
 
 
 def scan_file(path: Path) -> list[str]:
-    if path.suffix.lower() not in TEXT_SUFFIXES:
-        return []
     try:
         text = path.read_text(encoding="utf-8", errors="strict")
-    except (OSError, UnicodeError):
+    except OSError:
+        return ["file could not be read for boundary validation"]
+    except UnicodeError:
         return []
     findings: list[str] = []
     for pattern in SECRET_PATTERNS:
@@ -48,10 +48,13 @@ def scan_file(path: Path) -> list[str]:
 
 
 def scan_tree(root: Path) -> dict:
-    root = root.resolve()
     findings: list[dict[str, str]] = []
-    for path in root.rglob("*"):
-        if path.is_file() and ".git" not in path.parts:
-            for finding in scan_file(path):
-                findings.append({"path": str(path.relative_to(root)), "finding": finding})
+    try:
+        files = bundle_files(root)
+    except (OSError, ValueError) as exc:
+        return {"ok": False, "findings": [{"path": ".", "finding": str(exc)}]}
+    root = root.resolve()
+    for path in files:
+        for finding in scan_file(path):
+            findings.append({"path": path.relative_to(root).as_posix(), "finding": finding})
     return {"ok": not findings, "findings": findings}
