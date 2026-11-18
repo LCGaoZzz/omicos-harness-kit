@@ -1,33 +1,276 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.invalid/omicos-harness-kit/harness-manifest.schema.json",
+  "$id": "urn:omicos-harness-kit:schema:harness-manifest.schema.json:1.0",
   "title": "Public harness manifest",
   "type": "object",
-  "required": ["manifest_version", "kit_version", "contract_version", "id", "name", "source", "entrypoint", "contracts", "execution", "provenance", "limitations"],
+  "required": [
+    "manifest_version",
+    "kit_version",
+    "contract_version",
+    "id",
+    "name",
+    "source",
+    "entrypoint",
+    "contracts",
+    "execution",
+    "provenance",
+    "limitations"
+  ],
   "properties": {
-    "manifest_version": {"type": "string"},
-    "kit_version": {"type": "string"},
-    "contract_version": {"type": "string"},
-    "id": {"type": "string", "pattern": "^[A-Za-z0-9._-]+$"},
-    "name": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{1,63}$"},
+    "manifest_version": {
+      "const": "1.0"
+    },
+    "kit_version": {
+      "type": "string"
+    },
+    "contract_version": {
+      "const": "1.0"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._-]+$"
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+    },
     "source": {
       "type": "object",
-      "required": ["url", "owner", "repository", "license"],
+      "required": [
+        "url",
+        "owner",
+        "repository",
+        "license"
+      ],
       "properties": {
-        "url": {"type": "string", "format": "uri"},
-        "owner": {"type": "string", "minLength": 1},
-        "repository": {"type": "string", "minLength": 1},
-        "ref": {"type": ["string", "null"]},
-        "commit": {"type": ["string", "null"]},
-        "license": {"type": "object", "required": ["status"], "properties": {"status": {"enum": ["confirmed", "missing", "ambiguous", "restricted", "UNRESOLVED"]}, "evidence": {"type": ["string", "null"]}}, "additionalProperties": false}
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "commit": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[a-fA-F0-9]{40}$"
+        },
+        "license": {
+          "type": "object",
+          "required": [
+            "status"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "confirmed",
+                "missing",
+                "ambiguous",
+                "restricted",
+                "UNRESOLVED"
+              ]
+            },
+            "evidence": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "additionalProperties": false
+        }
       },
       "additionalProperties": false
     },
-    "entrypoint": {"type": "object", "required": ["kind", "arguments"], "properties": {"kind": {"type": "string"}, "command": {"type": ["array", "null"], "items": {"type": "string"}}, "module": {"type": ["string", "null"]}, "arguments": {"type": "array", "items": {"type": "string"}}}, "additionalProperties": false},
-    "contracts": {"type": "object", "required": ["request_schema", "result_schema", "reproducibility"], "additionalProperties": {"type": "string"}},
-    "execution": {"type": "object", "required": ["mode", "network", "source_execution", "production_deployed"], "properties": {"mode": {"type": "string"}, "network": {"type": "string"}, "source_execution": {"type": "string"}, "production_deployed": {"const": false}}, "additionalProperties": false},
-    "provenance": {"type": "object", "required": ["source_copied", "user_data_copied"], "properties": {"source_copied": {"const": false}, "user_data_copied": {"const": false}, "generated_files_sha256": {"type": ["string", "null"]}}, "additionalProperties": false},
-    "limitations": {"type": "array", "items": {"type": "string"}}
+    "entrypoint": {
+      "type": "object",
+      "required": [
+        "kind",
+        "arguments"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "UNRESOLVED",
+            "command",
+            "python_module"
+          ]
+        },
+        "command": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "module": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "arguments": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "contracts": {
+      "type": "object",
+      "required": [
+        "request_schema",
+        "result_schema",
+        "reproducibility"
+      ],
+      "properties": {
+        "request_schema": {
+          "type": "string",
+          "minLength": 1
+        },
+        "result_schema": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reproducibility": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "execution": {
+      "type": "object",
+      "required": [
+        "mode",
+        "network",
+        "source_execution",
+        "production_deployed"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "dry-run",
+            "reviewed"
+          ]
+        },
+        "network": {
+          "type": "string"
+        },
+        "source_execution": {
+          "type": "string"
+        },
+        "production_deployed": {
+          "const": false
+        },
+        "resource_limits": {
+          "type": "object",
+          "required": [
+            "cpu_seconds",
+            "memory_mb",
+            "wall_seconds"
+          ],
+          "properties": {
+            "cpu_seconds": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "memory_mb": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "wall_seconds": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "validation": {
+          "type": "object",
+          "required": [
+            "evidence_path",
+            "environment",
+            "tested_at"
+          ],
+          "properties": {
+            "evidence_path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "environment": {
+              "type": "string",
+              "minLength": 1
+            },
+            "tested_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "source_copied",
+        "user_data_copied"
+      ],
+      "properties": {
+        "source_copied": {
+          "const": false
+        },
+        "user_data_copied": {
+          "const": false
+        },
+        "generated_files_sha256": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "layout": {
+      "enum": [
+        "bundle",
+        "skill"
+      ]
+    },
+    "unresolved": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    }
   },
   "additionalProperties": false
 }

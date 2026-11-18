@@ -1,5 +1,6 @@
 include README.md SECURITY.md LICENSE_POLICY.md CONTRACT_VERSIONING.md LICENSE
 recursive-include schemas *.json
+recursive-include src/ohf/schemas *.json
 recursive-include templates *
 recursive-include skills *
 recursive-include docs *

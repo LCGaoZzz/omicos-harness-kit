@@ -9,7 +9,7 @@ The public repository may publish:
 - a validator and provenance recorder;
 - generic agent and skill templates;
 - synthetic examples and documentation;
-- a local installer that copies the generated bundle into a user-selected workspace.
+- a local installer that copies the complete skill subtree into a user-selected workspace and preserves its resource paths.
 
 ## Private Omicos deployment
 

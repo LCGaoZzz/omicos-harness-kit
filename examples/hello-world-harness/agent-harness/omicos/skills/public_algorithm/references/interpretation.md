@@ -1,3 +1,3 @@
-# Interpretation boundary
+# Interpretation
 
-Describe what the algorithm estimates, what it does not estimate, and which diagnostics are required. Do not convert a software output into a causal, clinical, or mechanistic claim without a separate scientific validation plan.
+UNRESOLVED: describe the algorithm's estimand, required diagnostics and limitations. A successful process alone is not scientific validation.

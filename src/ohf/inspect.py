@@ -2,8 +2,9 @@
 from __future__ import annotations
 
 import re
+from .paths import validate_name
 
-GITHUB_RE = re.compile(r"^https?://github\.com/([^/]+)/([^/#]+?)(?:\.git)?/?(?:#.*)?$")
+GITHUB_RE = re.compile(r"^https://github\.com/([A-Za-z0-9][A-Za-z0-9-]{0,38})/([A-Za-z0-9_.-]{1,100}?)(?:\.git)?/?$")
 
 
 def parse_github_url(url: str) -> tuple[str, str]:
@@ -18,7 +19,7 @@ def parse_github_url(url: str) -> tuple[str, str]:
 
 def inspection_plan(url: str, name: str | None = None) -> dict:
     owner, repo = parse_github_url(url)
-    package_name = name or repo.replace("-", "_").replace(".", "_")
+    package_name = validate_name(name if name is not None else repo.lower().replace("-", "_").replace(".", "_"))
     return {
         "inspection_version": "1.0",
         "source": {

@@ -1,5 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:omicos-harness-kit:schema:request.schema.json:1.0",
+  "title": "Public adapter request",
   "type": "object",
   "required": [
     "schema_version",

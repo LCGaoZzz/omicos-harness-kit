@@ -1,23 +1,49 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.invalid/omicos-harness-kit/request.schema.json",
+  "$id": "urn:omicos-harness-kit:schema:request.schema.json:1.0",
   "title": "Public adapter request",
   "type": "object",
-  "required": ["schema_version", "analysis", "input", "output"],
+  "required": [
+    "schema_version",
+    "analysis",
+    "input",
+    "output"
+  ],
   "properties": {
-    "schema_version": {"const": "1.0"},
-    "analysis": {"type": "string", "minLength": 1},
+    "schema_version": {
+      "const": "1.0"
+    },
+    "analysis": {
+      "type": "string",
+      "minLength": 1
+    },
     "input": {
       "type": "object",
-      "required": ["path"],
-      "properties": {"path": {"type": "string", "minLength": 1}},
+      "required": [
+        "path"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
       "additionalProperties": true
     },
-    "parameters": {"type": "object"},
+    "parameters": {
+      "type": "object"
+    },
     "output": {
       "type": "object",
-      "required": ["directory"],
-      "properties": {"directory": {"type": "string", "minLength": 1}},
+      "required": [
+        "directory"
+      ],
+      "properties": {
+        "directory": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
       "additionalProperties": false
     }
   },

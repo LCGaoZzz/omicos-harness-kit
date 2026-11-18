@@ -5,7 +5,9 @@ import argparse
 import json
 import sys
 from pathlib import Path
+from . import __version__
 from .inspect import inspection_plan
+from .install import install
 from .package import package
 from .policy import scan_tree
 from .scaffold import generate
@@ -14,6 +16,7 @@ from .validate import validate
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="ohf", description="Public Omicos-compatible harness compiler")
+    parser.add_argument("--version", action="version", version=__version__)
     sub = parser.add_subparsers(dest="command", required=True)
     inspect_p = sub.add_parser("inspect", help="create an evidence-only inspection plan")
     inspect_p.add_argument("repo_url")
@@ -25,9 +28,18 @@ def build_parser() -> argparse.ArgumentParser:
     init_p.add_argument("--output", type=Path, required=True)
     validate_p = sub.add_parser("validate", help="validate a generated bundle")
     validate_p.add_argument("root", type=Path)
+    validate_p.add_argument("--request", type=Path, help="validate a JSON request against the bundle contract")
+    validate_p.add_argument("--result", type=Path, help="validate a JSON result against the bundle contract")
+    validate_p.add_argument("--require-runtime-ready", action="store_true")
     package_p = sub.add_parser("package", help="create a deterministic public bundle archive")
     package_p.add_argument("root", type=Path)
     package_p.add_argument("--output", type=Path, required=True)
+    package_p.add_argument("--require-runtime-ready", action="store_true")
+    install_p = sub.add_parser("install", help="validate and install a complete skill into an existing workspace")
+    install_p.add_argument("root", type=Path)
+    install_p.add_argument("--workspace", type=Path, required=True)
+    install_p.add_argument("--replace", action="store_true", help="preserve a backup before replacing a skill")
+    install_p.add_argument("--require-runtime-ready", action="store_true")
     scan_p = sub.add_parser("boundary-scan", help="scan a tree for public/private boundary violations")
     scan_p.add_argument("root", type=Path)
     return parser
@@ -52,7 +64,8 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps({"ok": True, "output": str(args.output.resolve()), "id": manifest["id"]}, indent=2))
             return 0
         if args.command == "validate":
-            result = validate(args.root)
+            result = validate(args.root, request=args.request, result=args.result,
+                              require_runtime_ready=args.require_runtime_ready)
             print(json.dumps(result, indent=2, ensure_ascii=False))
             return 0 if result["ok"] else 2
         if args.command == "boundary-scan":
@@ -60,9 +73,12 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps(result, indent=2, ensure_ascii=False))
             return 0 if result["ok"] else 2
         if args.command == "package":
-            result = package(args.root, args.output)
+            result = package(args.root, args.output, require_runtime_ready=args.require_runtime_ready)
             print(json.dumps(result, indent=2, ensure_ascii=False))
             return 0
+        if args.command == "install":
+            return emit(install(args.root, args.workspace, replace=args.replace,
+                                require_runtime_ready=args.require_runtime_ready))
     except (OSError, ValueError, FileExistsError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2

@@ -1,22 +1,20 @@
 ---
-name: public_algorithm
-description: Run the reviewed public adapter contract for public_algorithm.
+name: "public_algorithm"
+description: Review and use the public adapter contract for public_algorithm; the generated runner is a dry run until an algorithm implementation is supplied.
 ---
 
 # public_algorithm skill
 
-## Inputs
+## Readiness
 
-Read `harness-manifest.json` and validate the request against `schemas/request.schema.json`. The input path must be inside the approved workspace. Do not accept credentials, arbitrary output paths, or undocumented fields.
+After importing with `ohf install`, read the skill-local `harness-manifest.json`. Before import, the authoritative manifest is at the bundle root. If the local manifest is missing, import the complete bundle instead of copying SKILL.md alone.
 
-## Execution
+If execution.mode is dry-run or unresolved fields remain, explain what still needs implementation. Do not claim an algorithm run. The generated scripts/run_adapter.py only checks the request contract and emits dry_run.
 
-The generated adapter starts in dry-run mode. It must remain dry-run until the entry point, license, input contract, output contract, resource limits, and isolation plan have been reviewed.
+## Inputs and execution
 
-## Outputs
+Validate requests against `schemas/request.schema.json`. Read `references/input-contract.md` for algorithm-specific requirements. Use only the reviewed entrypoint and the active execution environment's authorized tools and resource limits. Keep input and output paths inside the approved workspace.
 
-Write only to the declared output directory. Produce a result manifest, an environment record, and a reproducibility record. Do not claim that a process exit code proves scientific validity.
+## Outputs and interpretation
 
-## Interpretation
-
-Use `references/interpretation.md` and preserve the algorithm's own limitations. A result is an adapter execution result, not an Omicos deployment claim.
+Validate results against `schemas/result.schema.json`. Produce a reproducibility record matching `contracts/reproducibility.v1.json`. Use `references/interpretation.md`; report diagnostics, limitations, and whether an algorithm actually ran. Contract validation does not verify live product integration or scientific correctness.
